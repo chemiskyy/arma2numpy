@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 2.6)
 
-project(SiMMit)
+project(arma2numpy)
 
 # The version number
 set(VERSION_MAJOR 0)
@@ -45,25 +45,38 @@ include(FindBoost)
 find_package(Boost COMPONENTS python numpy REQUIRED )
 include_directories( ${Boost_INCLUDE_DIRS} )
 
-FIND_LIBRARY(SMARTPLUS_LIBRARY smartplus /usr/lib/libsmartplus)
-
 #Inclusion of public headers
 include_directories(include)
 
 #Command file to get all the files in the src/ and include/
-file(GLOB_RECURSE source_files src/core/* include/SiMMit/core/*)
-file(GLOB_RECURSE source_files_py src/python/* include/SiMMit/python/*)
+file(GLOB_RECURSE source_files src/* include/arma2numpy/*)
 
 #Add the files to the lib
-add_library(SiMMit SHARED ${source_files})
+add_library(arma2numpy SHARED ${source_files})
+
 #link against smartplus and Armadillo, and Boost for the numpy
-target_link_libraries(SiMMit ${ARMADILLO_LIBRARIES} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} smartplus)
+target_link_libraries(arma2numpy ${ARMADILLO_LIBRARIES} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
-#Define the wrapper library 
-add_library(SiMMitPy MODULE ${source_files_py})
+#Setup CMake to run tests
+enable_testing()
 
-#Wrapper library set_target properties
-set_target_properties(SiMMitPy PROPERTIES PREFIX "" SUFFIX ".so")
+##Testing
+#Test files are in a separate source directory called test
+file(GLOB_RECURSE test_files test/*.cpp)
 
-#link against SiMMit with Boost_python
-target_link_libraries(SiMMitPy ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${ARMADILLO_LIBRARIES} smartplus SiMMit)
+#Add the files to the lib
+add_library(Tarma2numpy MODULE ${test_files})
+#Move testing binaries into a testBin directory
+#Set executable files and library files
+set(LIBRARY_OUTPUT_PATH {CMAKE_CURRENT_SOURCE_DIR}/test)
+
+set_target_properties(Tarma2numpy PROPERTIES PREFIX "" SUFFIX ".so" LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_CURRENT_SOURCE_DIR}/test)
+
+#link against smartplus and arma2numpy, and Boost for the wrappers
+target_link_libraries(Tarma2numpy ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${ARMADILLO_LIBRARIES} arma2numpy)
+
+
+#Finally add it to test execution -
+#Notice the WORKING_DIRECTORY and COMMAND
+add_test(NAME Tarma2numpy WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test
+		COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/test/run_test.py)
