@@ -1,6 +1,19 @@
-///@file constitutive.hpp
-///@brief Constitutive tensors in Voigt notation
-///@version 1.0
+/* This file is part of arma2numpy.
+ 
+ arma2numpy is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ arma2numpy is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with arma2numpy.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ */
 
 #include <string.h>
 #include <assert.h>
@@ -12,6 +25,8 @@
 namespace bp = boost::python;
 namespace bn = boost::numpy;
 using namespace arma;
+
+namespace arma2numpy {
 
 vec array2vec(bn::ndarray const &array) {
     
@@ -28,10 +43,11 @@ vec array2vec(bn::ndarray const &array) {
 
 bn::ndarray vec2array(const vec &v) {
 
+    //create a tuple with the size of v
     bp::tuple shape = bp::make_tuple(v.n_elem);
-    // ...as well as a type for C++ float
+    //as well as a type for C++ double
     bn::dtype dtype = bn::dtype::get_builtin<double>();
-    // Construct an array with the above shape and type
+    //Construct an array with the above shape and type
     bn::ndarray a = bn::zeros(shape, dtype);
 
     for (int i = 0; i < v.n_elem; ++i) {
@@ -62,10 +78,11 @@ mat array2mat(bn::ndarray const &array) {
 
 bn::ndarray mat2array(const mat &m) {
     
+    //create a tuple with the size of m
     bp::tuple shape = bp::make_tuple(m.n_rows, m.n_cols);
-    // ...as well as a type for C++ float
+    //as well as a type for C++ double
     bn::dtype dtype = bn::dtype::get_builtin<double>();
-    // Construct an array with the above shape and type
+    //Construct an array with the above shape and type
     bn::ndarray a = bn::zeros(shape, dtype);
     
     for (int i = 0; i < m.n_rows; ++i) {
@@ -75,3 +92,5 @@ bn::ndarray mat2array(const mat &m) {
     }
     return a;
 }
+
+} //end of namespace arma2numpy

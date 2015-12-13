@@ -15,13 +15,17 @@
  
  */
 
-///@file Tarma2numpy.cpp
+///@file Tarma2numpy.hpp
 ///@brief Test for the arma2numpy library
 ///@version 1.0
 
 #include <boost/python.hpp>
 #include <boost/numpy.hpp>
 
-boost::numpy::ndarray test_vec_py(boost::numpy::ndarray const &y);
+namespace arma2numpy {
 
-boost::numpy::ndarray test_mat_py(boost::numpy::ndarray const &y);
+boost::numpy::ndarray test_vec(boost::numpy::ndarray const &y);
+
+boost::numpy::ndarray test_mat(boost::numpy::ndarray const &y);
+
+} //end of namespace arma2numpy

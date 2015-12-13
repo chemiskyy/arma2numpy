@@ -29,12 +29,17 @@ namespace bn = boost::numpy;
 using namespace std;
 using namespace arma;
 
-bn::ndarray test_vec_py(bn::ndarray const &y) {
+namespace arma2numpy {
+
+bn::ndarray test_vec(bn::ndarray const &y) {
     vec v = array2vec(y);
     return vec2array(v);
 }
 
-bn::ndarray test_mat_py(bn::ndarray const &y) {
+bn::ndarray test_mat(bn::ndarray const &y) {
     mat m = array2mat(y);
     return mat2array(m);
 }
+
+} //end of namespace arma2numpy
+

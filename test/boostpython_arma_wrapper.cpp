@@ -9,6 +9,7 @@ namespace bp = boost::python;
 namespace bn = boost::numpy;
 using namespace std;
 using namespace arma;
+using namespace arma2numpy;
 
 BOOST_PYTHON_MODULE(Tarma2numpy) {
 
@@ -16,6 +17,6 @@ BOOST_PYTHON_MODULE(Tarma2numpy) {
     bn::initialize();
     
     // Register the from-python converters
-    bp::def("test_vec", test_vec_py);
-    bp::def("test_mat", test_mat_py);
+    bp::def("test_vec", test_vec);
+    bp::def("test_mat", test_mat);
 }
