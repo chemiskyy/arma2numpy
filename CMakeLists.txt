@@ -15,6 +15,10 @@ else()
 	set(VERSION_NUMBER "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 endif()
 
+# put our local cmake find scripts at the beginning of the cmake
+# module search path
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib 
     CACHE PATH "Output directory for static libraries.")
 
@@ -31,19 +35,42 @@ set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 #Inclusion of Armadillo
 include(FindArmadillo)
 find_package(Armadillo REQUIRED)
-include_directories(${ARMADILLO_INCLUDE_DIRS})
+include_directories(SYSTEM ${ARMADILLO_INCLUDE_DIRS})
 
 # Find necessary packages
 find_package(PythonInterp REQUIRED)
-find_package(PythonLibs REQUIRED)
-#find_package(NumPy REQUIRED)
-include_directories( ${PYTHON_INCLUDE_DIRS})
+find_package(PythonLibsNew REQUIRED)
+find_package(NumPy REQUIRED)
+include_directories(SYSTEM ${PYTHON_INCLUDE_DIRS})
 
 #message("status: ${PYTHON_LIBRARIES}")
 
 include(FindBoost)
 find_package(Boost COMPONENTS python numpy REQUIRED )
-include_directories( ${Boost_INCLUDE_DIRS} )
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS} )
+
+message(STATUS "Build type ${CMAKE_BUILD_TYPE}")
+
+# Set the CFLAGS and CXXFLAGS depending on the options the user specified.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-unused-parameter")
+
+# Debugging CFLAGS.  Turn optimizations off; turn debugging symbols on.
+if(DEBUG)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O0")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -std=c++11")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -std=c++11")
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -std=c++11")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -std=c++11")
+endif(DEBUG)
+
+#if Apple OS, set the -framework Accelerate
+if(APPLE)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_CXX_FLAGS} -framework Accelerate")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -framework Accelerate")
+endif()
 
 #Inclusion of public headers
 include_directories(include)
