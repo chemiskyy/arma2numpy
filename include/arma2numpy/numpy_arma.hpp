@@ -30,4 +30,12 @@ boost::numpy::ndarray vec2array(const arma::vec&);
 
 boost::numpy::ndarray mat2array(const arma::mat&);
 
+arma::Col<int> array2Col_int(const boost::numpy::ndarray&);
+
+boost::numpy::ndarray Col_int2array(const arma::Col<int>&);
+
+arma::Mat<int> array2Mat_int(const boost::numpy::ndarray&);
+
+boost::numpy::ndarray Mat_int2array(const arma::Mat<int>&);
+    
 } //end of namespace arma2numpy
