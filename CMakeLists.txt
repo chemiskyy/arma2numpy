@@ -102,8 +102,32 @@ set_target_properties(Tarma2numpy PROPERTIES PREFIX "" SUFFIX ".so" LIBRARY_OUTP
 #link against smartplus and arma2numpy, and Boost for the wrappers
 target_link_libraries(Tarma2numpy ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${ARMADILLO_LIBRARIES} arma2numpy)
 
-
 #Finally add it to test execution -
 #Notice the WORKING_DIRECTORY and COMMAND
 add_test(NAME Tarma2numpy WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test
 		COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/test/run_test.py)
+
+################################################################################
+# INSTALL CONFIGURATION
+
+if(NOT INSTALL_INCLUDE_DIR)
+  set(INSTALL_INCLUDE_DIR "include")
+endif()
+
+if(NOT INSTALL_LIB_DIR)
+  set(INSTALL_LIB_DIR "lib")
+endif()
+
+# executables destination
+if(NOT INSTALL_BIN_DIR)
+  set(INSTALL_BIN_DIR "bin")
+endif()
+
+message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "INSTALL_LIB_DIR      = ${INSTALL_LIB_DIR}"     )
+message(STATUS "INSTALL_INCLUDE_DIR  = ${INSTALL_INCLUDE_DIR}" )
+message(STATUS "INSTALL_BIN_DIR      = ${INSTALL_BIN_DIR}"    )
+
+install(DIRECTORY include/ DESTINATION ${INSTALL_INCLUDE_DIR})
+install(TARGETS arma2numpy DESTINATION ${INSTALL_LIB_DIR})
+
