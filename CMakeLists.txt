@@ -102,6 +102,7 @@ set_target_properties(Tarma2numpy PROPERTIES PREFIX "" SUFFIX ".so" LIBRARY_OUTP
 #link against smartplus and arma2numpy, and Boost for the wrappers
 target_link_libraries(Tarma2numpy ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${ARMADILLO_LIBRARIES} arma2numpy)
 
+
 #Finally add it to test execution -
 #Notice the WORKING_DIRECTORY and COMMAND
 add_test(NAME Tarma2numpy WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test
